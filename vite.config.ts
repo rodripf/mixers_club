@@ -6,10 +6,10 @@ export default defineConfig({
     target: 'esnext',
     rollupOptions: {
       input: {
-        'service-worker': resolve(__dirname, 'src/service-worker/index.ts'),
-        'content-script': resolve(__dirname, 'src/content-script/index.ts'),
-        'popup': resolve(__dirname, 'src/popup/index.ts'),
-        'auth-callback': resolve(__dirname, 'src/auth-callback/index.ts'),
+        'service-worker': resolve(import.meta.dirname, 'src/service-worker/index.ts'),
+        'content-script': resolve(import.meta.dirname, 'src/content-script/index.ts'),
+        'popup': resolve(import.meta.dirname, 'src/popup/index.ts'),
+        'auth-callback': resolve(import.meta.dirname, 'src/auth-callback/index.ts'),
       },
       output: {
         entryFileNames: '[name].js',
