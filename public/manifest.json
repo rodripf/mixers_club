@@ -1,0 +1,25 @@
+{
+  "manifest_version": 3,
+  "name": "Mixers Club",
+  "version": "0.1.0",
+  "description": "Community reviews and trending recipes for Cookidoo",
+  "permissions": ["storage"],
+  "host_permissions": ["*://*.cookidoo.*/*"],
+  "background": {
+    "service_worker": "service-worker.js",
+    "type": "module"
+  },
+  "content_scripts": [{
+    "matches": ["*://*.cookidoo.*/*"],
+    "js": ["content-script.js"],
+    "run_at": "document_idle"
+  }],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Mixers Club"
+  },
+  "web_accessible_resources": [{
+    "resources": ["auth-callback.html"],
+    "matches": ["<all_urls>"]
+  }]
+}
