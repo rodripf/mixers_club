@@ -50,11 +50,12 @@ export async function handleAddReview(
   if (reviewErr) return { data: null, error: reviewErr.message }
 
   // Fetch username + email for immediate card rendering
-  const { data: profile } = await supabase
+  const { data: profile, error: profileErr } = await supabase
     .from('users')
     .select('username, email')
     .eq('id', sessionData.session.user.id)
     .single()
+  if (profileErr) console.error('[Mixers Club] profile fetch after review insert:', profileErr.message)
 
   return {
     data: {
