@@ -44,7 +44,7 @@ export function buildStarInput(initialRating: number | null): HTMLElement & { se
   })
 
   // Expose current rating for the form to read
-  Object.defineProperty(el, 'selectedRating', { get: () => currentRating })
+  Object.defineProperty(el, 'selectedRating', { get: () => currentRating, configurable: true })
 
   return el
 }
