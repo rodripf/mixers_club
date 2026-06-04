@@ -47,9 +47,10 @@ function render(session: Session | null) {
 
   app.innerHTML = `
     <h3 style="margin:0 0 8px">Mixers Club</h3>
-    <p>Signed in as <strong>${session.username}</strong></p>
+    <p>Signed in as <strong id="mc-username-display"></strong></p>
     <button id="mc-logout">Sign out</button>
   `
+  document.getElementById('mc-username-display')!.textContent = session.username
   document.getElementById('mc-logout')!.addEventListener('click', async () => {
     await send({ action: 'signOut' })
     render(null)
