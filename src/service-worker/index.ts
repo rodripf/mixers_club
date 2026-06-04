@@ -1,6 +1,7 @@
 import type { Message, MessageResponse } from '../types'
 import { handleSendMagicLink, handleAuthCallback, handleGetSession, handleSignOut, handleSetUsername } from './auth'
 import { handleGetReviews, handleAddReview, handleVote, handleGetTrending } from './api'
+import { supabase } from './supabase'
 
 export async function handleMessage(message: Message): Promise<MessageResponse<unknown>> {
   try {
@@ -16,7 +17,7 @@ export async function handleMessage(message: Message): Promise<MessageResponse<u
       case 'getTrending':    return handleGetTrending()
       default: {
         const exhaustive: never = message
-        return { data: null, error: `Unknown action: ${(exhaustive as Message).action}` }
+        return { data: null, error: `Unknown action: ${(message as { action: string }).action}` }
       }
     }
   } catch (err) {
@@ -27,6 +28,12 @@ export async function handleMessage(message: Message): Promise<MessageResponse<u
 }
 
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
-  handleMessage(message as Message).then(sendResponse)
-  return true // keep channel open for async
+  handleMessage(message as Message)
+    .then(sendResponse)
+    .catch((err) => sendResponse({ data: null, error: String(err) }))
+  return true
 })
+
+// MV3 service workers can be killed and restarted at any time.
+// Re-initialize auto-refresh on each startup so tokens don't expire silently.
+supabase.auth.startAutoRefresh()
