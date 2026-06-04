@@ -52,13 +52,17 @@ export async function handleSignOut(): Promise<MessageResponse> {
 }
 
 export async function handleSetUsername(username: string): Promise<MessageResponse> {
-  const { data: { session } } = await supabase.auth.getSession()
-  if (!session) return { data: null, error: 'Not authenticated' }
+  const trimmed = username.trim()
+  if (!trimmed) return { data: null, error: 'Username cannot be empty' }
+
+  const { data, error: sessionError } = await supabase.auth.getSession()
+  if (sessionError) return { data: null, error: sessionError.message }
+  if (!data.session) return { data: null, error: 'Not authenticated' }
 
   const { error } = await supabase.from('users').upsert({
-    id: session.user.id,
-    username: username.trim(),
-    email: session.user.email ?? '',
+    id: data.session.user.id,
+    username: trimmed,
+    email: data.session.user.email ?? '',
   })
   if (error) return { data: null, error: error.message }
   return { data: undefined, error: null }
