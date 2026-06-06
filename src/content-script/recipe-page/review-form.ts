@@ -1,6 +1,7 @@
 import type { ReviewType } from '../../types'
 import { buildStarInput, syncFromCookidoo } from './star-watcher'
 import { t } from '../../i18n'
+import { friendlyError } from '../error-map'
 
 interface FormOptions {
   initial?: { type: ReviewType; stars: number; body: string }
@@ -136,7 +137,7 @@ export function buildReviewForm(opts: FormOptions): HTMLElement {
     })
 
     if (result.error) {
-      errorEl.textContent = `Error: ${result.error}`
+      errorEl.textContent = friendlyError(result.error ?? '')
       errorEl.style.display = ''
       submitBtn.disabled = false
       submitBtn.textContent = isEdit ? t('formSave') : t('formSubmit')

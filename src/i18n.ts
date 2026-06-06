@@ -39,6 +39,10 @@ const translations = {
     authErrUsername: 'Please enter a username.',
     authSaveUsername: 'Save username', authSavingUsername: 'Saving…',
     translate: 'Translate', showOriginal: 'Show original', translating: 'Translating…',
+    errUsernameTaken: 'Username is already taken',
+    errEmailRateLimit: 'Too many attempts, please wait a few minutes',
+    errInputTooLong: 'Input exceeds maximum length',
+    errGeneric: 'Something went wrong, please try again',
   },
   es: {
     signOut: 'cerrar sesión',
@@ -78,6 +82,10 @@ const translations = {
     authErrUsername: 'Por favor introduce un nombre de usuario.',
     authSaveUsername: 'Guardar nombre de usuario', authSavingUsername: 'Guardando…',
     translate: 'Traducir', showOriginal: 'Ver original', translating: 'Traduciendo…',
+    errUsernameTaken: 'El nombre de usuario ya está en uso',
+    errEmailRateLimit: 'Demasiados intentos, espera unos minutos',
+    errInputTooLong: 'El texto supera la longitud máxima',
+    errGeneric: 'Algo salió mal, inténtalo de nuevo',
   },
   pt: {
     signOut: 'sair',
@@ -117,6 +125,10 @@ const translations = {
     authErrUsername: 'Por favor introduza um nome de utilizador.',
     authSaveUsername: 'Guardar nome de utilizador', authSavingUsername: 'A guardar…',
     translate: 'Traduzir', showOriginal: 'Ver original', translating: 'A traduzir…',
+    errUsernameTaken: 'Nome de utilizador já em uso',
+    errEmailRateLimit: 'Demasiadas tentativas, aguarda alguns minutos',
+    errInputTooLong: 'O texto excede o comprimento máximo',
+    errGeneric: 'Algo correu mal, tenta novamente',
   },
   it: {
     signOut: 'esci',
@@ -156,6 +168,10 @@ const translations = {
     authErrUsername: 'Inserisci un nome utente.',
     authSaveUsername: 'Salva nome utente', authSavingUsername: 'Salvataggio…',
     translate: 'Traduci', showOriginal: 'Mostra originale', translating: 'Traduzione…',
+    errUsernameTaken: 'Nome utente già in uso',
+    errEmailRateLimit: 'Troppi tentativi, attendi qualche minuto',
+    errInputTooLong: 'Il testo supera la lunghezza massima',
+    errGeneric: 'Qualcosa è andato storto, riprova',
   },
 } satisfies Record<Lang, Record<string, string>>
 

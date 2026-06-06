@@ -1,5 +1,6 @@
 import type { Message, PublicSession } from '../types'
 import { t } from '../i18n'
+import { friendlyError } from './error-map'
 
 function send<T = void>(msg: Message): Promise<{ data: T | null; error: string | null }> {
   return chrome.runtime.sendMessage(msg)
@@ -120,7 +121,7 @@ export function showAuthModal(onAuthenticated: () => void): void {
       errorEl.style.display = 'none'
       const result = await send({ action: 'sendMagicLink', email })
       if (result.error) {
-        errorEl.textContent = `Error: ${result.error}`
+        errorEl.textContent = friendlyError(result.error ?? '')
         errorEl.style.display = ''
         btn.disabled = false
         btn.textContent = t('authSendLink')
@@ -191,7 +192,7 @@ export function showAuthModal(onAuthenticated: () => void): void {
       errorEl.style.display = 'none'
       const result = await send({ action: 'setUsername', username })
       if (result.error) {
-        errorEl.textContent = `Error: ${result.error}`
+        errorEl.textContent = friendlyError(result.error ?? '')
         errorEl.style.display = ''
         btn.disabled = false
         btn.textContent = t('authSaveUsername')
