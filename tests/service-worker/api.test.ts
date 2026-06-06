@@ -215,3 +215,81 @@ describe('handleAddReview', () => {
     expect(mockFrom).toHaveBeenCalledTimes(1) // no fallback SELECT triggered
   })
 })
+
+describe('handleUpdateReview', () => {
+  beforeEach(() => vi.clearAllMocks())
+
+  it('invalidates cache and returns success when review is owned by user', async () => {
+    const mockSelect = vi.fn().mockResolvedValue({ data: [{ id: 'rev-uuid' }], error: null })
+    const mockEq2 = vi.fn().mockReturnValue({ select: mockSelect })
+    const mockEq1 = vi.fn().mockReturnValue({ eq: mockEq2 })
+    const mockUpdate = vi.fn().mockReturnValue({ eq: mockEq1 })
+    mockFrom.mockReturnValue({ update: mockUpdate })
+    mockGetSession.mockResolvedValue({ data: { session: { user: { id: 'uid-1' } } }, error: null })
+
+    const { handleUpdateReview } = await import('../../src/service-worker/api')
+    const result = await handleUpdateReview({
+      action: 'updateReview', reviewId: 'rev-uuid', cookidooId: 'r1',
+      type: 'comment', stars: 5, body: 'updated body',
+    })
+
+    expect(result.error).toBeNull()
+    expect(chrome.storage.local.remove).toHaveBeenCalledWith('mc_reviews_r1')
+  })
+
+  it('returns error and does NOT invalidate cache when 0 rows matched (IDOR attempt)', async () => {
+    const mockSelect = vi.fn().mockResolvedValue({ data: [], error: null })
+    const mockEq2 = vi.fn().mockReturnValue({ select: mockSelect })
+    const mockEq1 = vi.fn().mockReturnValue({ eq: mockEq2 })
+    const mockUpdate = vi.fn().mockReturnValue({ eq: mockEq1 })
+    mockFrom.mockReturnValue({ update: mockUpdate })
+    mockGetSession.mockResolvedValue({ data: { session: { user: { id: 'uid-1' } } }, error: null })
+
+    const { handleUpdateReview } = await import('../../src/service-worker/api')
+    const result = await handleUpdateReview({
+      action: 'updateReview', reviewId: 'other-users-rev', cookidooId: 'r1',
+      type: 'comment', stars: 1, body: 'malicious',
+    })
+
+    expect(result.error).toBe('Review not found or not yours')
+    expect(chrome.storage.local.remove).not.toHaveBeenCalled()
+  })
+})
+
+describe('handleDeleteReview', () => {
+  beforeEach(() => vi.clearAllMocks())
+
+  it('invalidates cache and returns success when review is owned by user', async () => {
+    const mockSelect = vi.fn().mockResolvedValue({ data: [{ id: 'rev-uuid' }], error: null })
+    const mockEq2 = vi.fn().mockReturnValue({ select: mockSelect })
+    const mockEq1 = vi.fn().mockReturnValue({ eq: mockEq2 })
+    const mockDelete = vi.fn().mockReturnValue({ eq: mockEq1 })
+    mockFrom.mockReturnValue({ delete: mockDelete })
+    mockGetSession.mockResolvedValue({ data: { session: { user: { id: 'uid-1' } } }, error: null })
+
+    const { handleDeleteReview } = await import('../../src/service-worker/api')
+    const result = await handleDeleteReview({
+      action: 'deleteReview', reviewId: 'rev-uuid', cookidooId: 'r1',
+    })
+
+    expect(result.error).toBeNull()
+    expect(chrome.storage.local.remove).toHaveBeenCalledWith('mc_reviews_r1')
+  })
+
+  it('returns error and does NOT invalidate cache when 0 rows matched (IDOR attempt)', async () => {
+    const mockSelect = vi.fn().mockResolvedValue({ data: [], error: null })
+    const mockEq2 = vi.fn().mockReturnValue({ select: mockSelect })
+    const mockEq1 = vi.fn().mockReturnValue({ eq: mockEq2 })
+    const mockDelete = vi.fn().mockReturnValue({ eq: mockEq1 })
+    mockFrom.mockReturnValue({ delete: mockDelete })
+    mockGetSession.mockResolvedValue({ data: { session: { user: { id: 'uid-1' } } }, error: null })
+
+    const { handleDeleteReview } = await import('../../src/service-worker/api')
+    const result = await handleDeleteReview({
+      action: 'deleteReview', reviewId: 'other-users-rev', cookidooId: 'r1',
+    })
+
+    expect(result.error).toBe('Review not found or not yours')
+    expect(chrome.storage.local.remove).not.toHaveBeenCalled()
+  })
+})

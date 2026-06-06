@@ -148,12 +148,14 @@ export async function handleUpdateReview(
   if (sessionError) return { data: null, error: sessionError.message }
   if (!sessionData.session) return { data: null, error: 'Not authenticated' }
 
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from('reviews')
     .update({ type: msg.type, body: msg.body, stars: msg.stars })
     .eq('id', msg.reviewId)
     .eq('user_id', sessionData.session.user.id)
+    .select('id')
   if (error) return { data: null, error: error.message }
+  if (!data || data.length === 0) return { data: null, error: 'Review not found or not yours' }
   await invalidateReviewsCache(msg.cookidooId)
   return { data: undefined, error: null }
 }
@@ -165,12 +167,14 @@ export async function handleDeleteReview(
   if (sessionError) return { data: null, error: sessionError.message }
   if (!sessionData.session) return { data: null, error: 'Not authenticated' }
 
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from('reviews')
     .delete()
     .eq('id', msg.reviewId)
     .eq('user_id', sessionData.session.user.id)
+    .select('id')
   if (error) return { data: null, error: error.message }
+  if (!data || data.length === 0) return { data: null, error: 'Review not found or not yours' }
   await invalidateReviewsCache(msg.cookidooId)
   return { data: undefined, error: null }
 }
