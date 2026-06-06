@@ -293,3 +293,28 @@ describe('handleDeleteReview', () => {
     expect(chrome.storage.local.remove).not.toHaveBeenCalled()
   })
 })
+
+describe('handleSetUsername', () => {
+  beforeEach(() => vi.clearAllMocks())
+
+  it('rejects usernames longer than 30 characters', async () => {
+    const { handleSetUsername } = await import('../../src/service-worker/auth')
+    const result = await handleSetUsername('a'.repeat(31))
+    expect(result.error).toBe('Username must be 30 characters or fewer')
+  })
+
+  it('rejects usernames with invalid characters', async () => {
+    const { handleSetUsername } = await import('../../src/service-worker/auth')
+    const result = await handleSetUsername('bad username!')
+    expect(result.error).toBe('Username can only contain letters, numbers, underscores, and hyphens')
+  })
+
+  it('accepts valid usernames (letters, numbers, underscores, hyphens)', async () => {
+    mockGetSession.mockResolvedValue({ data: { session: { user: { id: 'uid-1', email: 'a@b.com' } } }, error: null })
+    const mockUpsert = vi.fn().mockResolvedValue({ error: null })
+    mockFrom.mockReturnValue({ upsert: mockUpsert })
+    const { handleSetUsername } = await import('../../src/service-worker/auth')
+    const result = await handleSetUsername('chef_rodriguez-99')
+    expect(result.error).toBeNull()
+  })
+})

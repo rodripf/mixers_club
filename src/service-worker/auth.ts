@@ -57,6 +57,8 @@ export async function handleSignOut(): Promise<MessageResponse> {
 export async function handleSetUsername(username: string): Promise<MessageResponse> {
   const trimmed = username.trim()
   if (!trimmed) return { data: null, error: 'Username cannot be empty' }
+  if (trimmed.length > 30) return { data: null, error: 'Username must be 30 characters or fewer' }
+  if (!/^[\w-]+$/.test(trimmed)) return { data: null, error: 'Username can only contain letters, numbers, underscores, and hyphens' }
 
   const { data, error: sessionError } = await supabase.auth.getSession()
   if (sessionError) return { data: null, error: sessionError.message }
