@@ -76,10 +76,19 @@ export function buildReviewForm(opts: FormOptions): HTMLElement {
   const textarea = document.createElement('textarea')
   textarea.id = 'mc-body'
   textarea.rows = 4
+  textarea.maxLength = 2000
   textarea.placeholder = t('formBodyPlaceholder')
-  textarea.style.cssText = 'width:100%;box-sizing:border-box;padding:8px;margin:8px 0'
+  textarea.style.cssText = 'width:100%;box-sizing:border-box;padding:8px;margin:8px 0 2px'
   if (opts.initial?.body) textarea.value = opts.initial.body
   container.appendChild(textarea)
+
+  const counter = document.createElement('p')
+  counter.style.cssText = 'margin:0 0 8px;font-size:0.75rem;color:#9ca3af;text-align:right'
+  counter.textContent = `${textarea.value.length} / 2000`
+  textarea.addEventListener('input', () => {
+    counter.textContent = `${textarea.value.length} / 2000`
+  })
+  container.appendChild(counter)
 
   // Error
   const errorEl = document.createElement('p')
