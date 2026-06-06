@@ -4,6 +4,7 @@
   "version": "0.1.0",
   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArkX+1pmJHIUySgqbJYGSUbImro7WK2dSAGw4j5UWqupMfo+pC5yOKxC3M5Mmlfa18f9jn4hPfwCJTh/RDj/aUlw53JxZhVsGIc14ZhA0s7pF/v+ji79moM16jgxVWcS8DUZO+MBinUpsuCOC3WVx+536DCo08L9N86ZsrdSW7LmlytJUtKcgCoJIMZ/RQoF+/3F7udCsA6eAHvW14wCFc4Tg5lTJ5erDMq+RTUQmX5/axx+IYSG5IhSAinrl8ZTwXoBd8ThTxGwJ+ZXWYUNUhzmy0b9QoXKjDELOHl1NHSkJe1/tZPYxuq4lYxZ0onuZepMAlf6QGIgkkgI9M36qIQIDAQAB",
   "description": "Community reviews and trending recipes for Cookidoo",
+  "icons": { "16": "icon16.png", "48": "icon48.png", "128": "icon128.png" },
   "permissions": ["storage"],
   "host_permissions": [
     "*://translate.googleapis.com/*",
