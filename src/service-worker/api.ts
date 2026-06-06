@@ -47,15 +47,35 @@ export async function handleAddReview(
   msg: Extract<Message, { action: 'addReview' }>
 ): Promise<MessageResponse<Review>> {
   // Upsert recipe row
-  const { data: recipe, error: recipeErr } = await supabase
+  const { data: upsertedRecipe, error: upsertErr } = await supabase
     .from('recipes')
     .upsert(
       { cookidoo_id: msg.cookidooId, domain: msg.domain, name: msg.recipeName, image_url: msg.imageUrl ?? null },
-      { onConflict: 'cookidoo_id,domain' }
+      { onConflict: 'cookidoo_id,domain', ignoreDuplicates: true }
     )
     .select('id')
     .single()
-  if (recipeErr) return { data: null, error: recipeErr.message }
+
+  // PGRST116 = no rows returned = recipe already existed (ignoreDuplicates skipped the INSERT)
+  // Any other error is a real failure — return it immediately
+  if (upsertErr && upsertErr.code !== 'PGRST116') {
+    return { data: null, error: upsertErr.message }
+  }
+
+  // ignoreDuplicates returns no rows when the recipe already exists (PGRST116).
+  // Fall back to a SELECT to get the existing ID.
+  let recipe: { id: string } | null = upsertedRecipe
+  if (!recipe) {
+    const { data: existing, error: selectErr } = await supabase
+      .from('recipes')
+      .select('id')
+      .eq('cookidoo_id', msg.cookidooId)
+      .eq('domain', msg.domain)
+      .single()
+    if (selectErr) return { data: null, error: selectErr.message }
+    recipe = existing
+  }
+  if (!recipe) return { data: null, error: 'Recipe not found' }
 
   const { data: sessionData, error: sessionError } = await supabase.auth.getSession()
   if (sessionError) return { data: null, error: sessionError.message }

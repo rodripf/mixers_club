@@ -109,3 +109,109 @@ describe('handleVote', () => {
     )
   })
 })
+
+describe('handleAddReview', () => {
+  beforeEach(() => vi.clearAllMocks())
+
+  it('upserts recipe with ignoreDuplicates: true to prevent data poisoning', async () => {
+    const mockSingle = vi.fn().mockResolvedValue({ data: { id: 'recipe-id' }, error: null })
+    const mockSelectRecipe = vi.fn().mockReturnValue({ single: mockSingle })
+    const mockUpsert = vi.fn().mockReturnValue({ select: mockSelectRecipe })
+
+    const mockSingleRev = vi.fn().mockResolvedValue({
+      data: { id: 'rev-id', recipe_id: 'recipe-id', user_id: 'uid-1', type: 'comment', body: 'good', stars: 5, created_at: '' },
+      error: null,
+    })
+    const mockSelectRev = vi.fn().mockReturnValue({ single: mockSingleRev })
+    const mockInsert = vi.fn().mockReturnValue({ select: mockSelectRev })
+
+    const mockSingleUser = vi.fn().mockResolvedValue({ data: { username: 'u', email_hash: 'abc' }, error: null })
+    const mockEqUser = vi.fn().mockReturnValue({ single: mockSingleUser })
+    const mockSelectUser = vi.fn().mockReturnValue({ eq: mockEqUser })
+
+    mockFrom.mockImplementation((table: string) => {
+      if (table === 'recipes') return { upsert: mockUpsert }
+      if (table === 'reviews') return { insert: mockInsert }
+      if (table === 'users') return { select: mockSelectUser }
+      return {}
+    })
+    mockGetSession.mockResolvedValue({ data: { session: { user: { id: 'uid-1' } } }, error: null })
+
+    const { handleAddReview } = await import('../../src/service-worker/api')
+    await handleAddReview({
+      action: 'addReview', cookidooId: 'r1', domain: 'cookidoo.es',
+      recipeName: 'Test', type: 'comment', stars: 5, body: 'good',
+    })
+
+    expect(mockUpsert).toHaveBeenCalledWith(
+      expect.objectContaining({ cookidoo_id: 'r1' }),
+      expect.objectContaining({ onConflict: 'cookidoo_id,domain', ignoreDuplicates: true })
+    )
+  })
+
+  it('falls back to SELECT when recipe already exists (ignoreDuplicates returns no rows)', async () => {
+    // upsert returns null (recipe existed, INSERT was skipped)
+    const mockSingleUpsert = vi.fn().mockResolvedValue({ data: null, error: null })
+    const mockSelectRecipeUpsert = vi.fn().mockReturnValue({ single: mockSingleUpsert })
+    const mockUpsert = vi.fn().mockReturnValue({ select: mockSelectRecipeUpsert })
+
+    // fallback SELECT returns the existing recipe id
+    const mockSingleSelect = vi.fn().mockResolvedValue({ data: { id: 'existing-recipe-id' }, error: null })
+    const mockEqSelect2 = vi.fn().mockReturnValue({ single: mockSingleSelect })
+    const mockEqSelect1 = vi.fn().mockReturnValue({ eq: mockEqSelect2 })
+    const mockSelectFallback = vi.fn().mockReturnValue({ eq: mockEqSelect1 })
+
+    const mockSingleRev = vi.fn().mockResolvedValue({
+      data: { id: 'rev-id', recipe_id: 'existing-recipe-id', user_id: 'uid-1', type: 'comment', body: 'good', stars: 5, created_at: '' },
+      error: null,
+    })
+    const mockSelectRev = vi.fn().mockReturnValue({ single: mockSingleRev })
+    const mockInsert = vi.fn().mockReturnValue({ select: mockSelectRev })
+
+    const mockSingleUser = vi.fn().mockResolvedValue({ data: { username: 'u', email_hash: 'abc' }, error: null })
+    const mockEqUser = vi.fn().mockReturnValue({ single: mockSingleUser })
+    const mockSelectUser = vi.fn().mockReturnValue({ eq: mockEqUser })
+
+    let recipesCallCount = 0
+    mockFrom.mockImplementation((table: string) => {
+      if (table === 'recipes') {
+        recipesCallCount++
+        if (recipesCallCount === 1) return { upsert: mockUpsert }       // first call: upsert
+        return { select: mockSelectFallback }                            // second call: fallback SELECT
+      }
+      if (table === 'reviews') return { insert: mockInsert }
+      if (table === 'users') return { select: mockSelectUser }
+      return {}
+    })
+    mockGetSession.mockResolvedValue({ data: { session: { user: { id: 'uid-1' } } }, error: null })
+
+    const { handleAddReview } = await import('../../src/service-worker/api')
+    const result = await handleAddReview({
+      action: 'addReview', cookidooId: 'r1', domain: 'cookidoo.es',
+      recipeName: 'Test', type: 'comment', stars: 5, body: 'good',
+    })
+
+    expect(result.error).toBeNull()
+    expect(mockSelectFallback).toHaveBeenCalled()
+  })
+
+  it('returns error immediately when upsert fails with a real error (not PGRST116)', async () => {
+    const mockSingle = vi.fn().mockResolvedValue({
+      data: null,
+      error: { code: '42501', message: 'permission denied for table recipes' },
+    })
+    const mockSelectRecipe = vi.fn().mockReturnValue({ single: mockSingle })
+    const mockUpsert = vi.fn().mockReturnValue({ select: mockSelectRecipe })
+    mockFrom.mockReturnValue({ upsert: mockUpsert })
+    mockGetSession.mockResolvedValue({ data: { session: { user: { id: 'uid-1' } } }, error: null })
+
+    const { handleAddReview } = await import('../../src/service-worker/api')
+    const result = await handleAddReview({
+      action: 'addReview', cookidooId: 'r1', domain: 'cookidoo.es',
+      recipeName: 'Test', type: 'comment', stars: 5, body: 'good',
+    })
+
+    expect(result.error).toBe('permission denied for table recipes')
+    expect(mockFrom).toHaveBeenCalledTimes(1) // no fallback SELECT triggered
+  })
+})
