@@ -31,5 +31,8 @@ export async function translateText(text: string, targetLang: string): Promise<s
   const resp = await fetch(url)
   if (!resp.ok) throw new Error(`${resp.status}`)
   const data = await resp.json() as Array<unknown>
+  if (!Array.isArray(data) || !Array.isArray(data[0])) {
+    throw new Error('Unexpected translation response shape')
+  }
   return (data[0] as Array<[string]>).map(chunk => chunk[0]).join('')
 }

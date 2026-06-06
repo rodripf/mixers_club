@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest'
+import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { waitForElement, gravatarUrl } from '../../src/content-script/dom-helpers'
 
 describe('waitForElement', () => {
@@ -41,5 +41,28 @@ describe('gravatarUrl', () => {
   it('uses the default size of 48', () => {
     const hash = 'b'.repeat(64)
     expect(gravatarUrl(hash)).toBe(`https://www.gravatar.com/avatar/${hash}?d=identicon&s=48`)
+  })
+})
+
+describe('translateText', () => {
+  it('throws on unexpected response shape (not nested array)', async () => {
+    global.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ unexpected: 'object' }),
+    }) as unknown as typeof fetch
+
+    const { translateText } = await import('../../src/content-script/dom-helpers')
+    await expect(translateText('hello', 'es')).rejects.toThrow('Unexpected translation response shape')
+  })
+
+  it('returns joined translated string on valid response', async () => {
+    global.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => [[['Hola', 'hello', null, null, null]], null, 'en'],
+    }) as unknown as typeof fetch
+
+    const { translateText } = await import('../../src/content-script/dom-helpers')
+    const result = await translateText('hello', 'es')
+    expect(result).toBe('Hola')
   })
 })
