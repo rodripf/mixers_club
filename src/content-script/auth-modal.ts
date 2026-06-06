@@ -1,4 +1,4 @@
-import type { Message, Session } from '../types'
+import type { Message, PublicSession } from '../types'
 import { t } from '../i18n'
 
 function send<T = void>(msg: Message): Promise<{ data: T | null; error: string | null }> {
@@ -158,7 +158,7 @@ export function showAuthModal(onAuthenticated: () => void): void {
       btn.disabled = true
       btn.textContent = t('authChecking')
       hint.textContent = ''
-      const result = await send<Session>({ action: 'getSession' })
+      const result = await send<PublicSession>({ action: 'getSession' })
       if (!result.data) {
         hint.textContent = t('authNotVerified')
         btn.disabled = false

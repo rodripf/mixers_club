@@ -1,4 +1,4 @@
-import type { Message, Review, ReviewType, Session } from '../../types'
+import type { Message, PublicSession, Review, ReviewType } from '../../types'
 import { waitForElement } from '../dom-helpers'
 import { buildReviewsSection, renderReviewCard, setVoteButtonStyle } from './reviews-section'
 import { buildReviewForm } from './review-form'
@@ -28,7 +28,7 @@ export async function initRecipePage(cookidooId: string, domain: string): Promis
 
     const [reviewsResult, sessionResult] = await Promise.all([
       send<Review[]>({ action: 'getReviews', cookidooId }),
-      send<Session>({ action: 'getSession' }),
+      send<PublicSession>({ action: 'getSession' }),
     ])
 
     const reviews = reviewsResult.data ?? []

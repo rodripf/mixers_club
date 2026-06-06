@@ -39,12 +39,10 @@ export type Message =
   | { action: 'getTrending' }
   | { action: 'setUsername'; username: string }
 
-export interface Session {
+export interface PublicSession {
   userId: string
-  username: string | null
   email: string
-  accessToken: string
-  refreshToken: string
+  username: string | null
 }
 
 export type MessageResponse<T = void> =

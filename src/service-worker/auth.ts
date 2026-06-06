@@ -1,4 +1,4 @@
-import type { MessageResponse, Session } from '../types'
+import type { MessageResponse, PublicSession } from '../types'
 import { supabase } from './supabase'
 
 async function sha256hex(text: string): Promise<string> {
@@ -26,12 +26,12 @@ export async function handleAuthCallback(token: string): Promise<MessageResponse
   return { data: undefined, error: null }
 }
 
-export async function handleGetSession(): Promise<MessageResponse<Session | null>> {
+export async function handleGetSession(): Promise<MessageResponse<PublicSession | null>> {
   const { data, error } = await supabase.auth.getSession()
   if (error) return { data: null, error: error.message }
   if (!data.session) return { data: null, error: null }
 
-  const { user, access_token, refresh_token } = data.session
+  const { user } = data.session
   const { data: profile } = await supabase
     .from('users')
     .select('username')
@@ -43,8 +43,6 @@ export async function handleGetSession(): Promise<MessageResponse<Session | null
       userId: user.id,
       email: user.email ?? '',
       username: profile?.username ?? null,
-      accessToken: access_token,
-      refreshToken: refresh_token,
     },
     error: null,
   }
