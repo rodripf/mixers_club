@@ -32,14 +32,14 @@ describe('waitForElement', () => {
 })
 
 describe('gravatarUrl', () => {
-  it('returns a gravatar URL with identicon fallback', () => {
-    const url = gravatarUrl('Test@Example.com', 48)
-    expect(url).toMatch(/^https:\/\/www\.gravatar\.com\/avatar\/[a-f0-9]{32}\?d=identicon&s=48$/)
+  it('returns a gravatar URL with a pre-computed SHA-256 hash', () => {
+    const hash = 'a'.repeat(64) // 64 hex chars = SHA-256
+    const url = gravatarUrl(hash, 48)
+    expect(url).toBe(`https://www.gravatar.com/avatar/${hash}?d=identicon&s=48`)
   })
 
-  it('is case-insensitive and trims whitespace', () => {
-    const a = gravatarUrl('TEST@EXAMPLE.COM', 48)
-    const b = gravatarUrl('  test@example.com  ', 48)
-    expect(a).toBe(b)
+  it('uses the default size of 48', () => {
+    const hash = 'b'.repeat(64)
+    expect(gravatarUrl(hash)).toBe(`https://www.gravatar.com/avatar/${hash}?d=identicon&s=48`)
   })
 })

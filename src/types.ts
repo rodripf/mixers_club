@@ -9,7 +9,7 @@ export interface Review {
   stars: number
   created_at: string
   username: string
-  email: string
+  email_hash: string
   likes: number
   dislikes: number
   user_vote: 1 | -1 | null
@@ -22,6 +22,7 @@ export interface TrendingRecipe {
   avg_stars: number
   review_count: number
   score: number
+  image_url?: string | null
 }
 
 // All messages from content script to service worker
@@ -30,9 +31,11 @@ export type Message =
   | { action: 'authCallback'; token: string }
   | { action: 'getSession' }
   | { action: 'signOut' }
-  | { action: 'getReviews'; cookidooId: string; domain: string }
-  | { action: 'addReview'; cookidooId: string; domain: string; recipeName: string; type: ReviewType; stars: number; body: string }
-  | { action: 'vote'; reviewId: string; value: 1 | -1 }
+  | { action: 'getReviews'; cookidooId: string }
+  | { action: 'addReview'; cookidooId: string; domain: string; recipeName: string; type: ReviewType; stars: number; body: string; imageUrl?: string | null }
+  | { action: 'vote'; reviewId: string; value: 1 | -1 | 0 }
+  | { action: 'updateReview'; reviewId: string; cookidooId: string; type: ReviewType; stars: number; body: string }
+  | { action: 'deleteReview'; reviewId: string; cookidooId: string }
   | { action: 'getTrending' }
   | { action: 'setUsername'; username: string }
 

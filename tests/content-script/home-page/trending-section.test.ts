@@ -13,9 +13,9 @@ describe('buildTrendingSection', () => {
     expect(section.id).toBe('mixers-club-trending')
   })
 
-  it('renders one core-tile per recipe', () => {
+  it('renders one article tile per recipe', () => {
     const section = buildTrendingSection([recipe])
-    expect(section.querySelectorAll('core-tile').length).toBe(1)
+    expect(section.querySelectorAll('article').length).toBe(1)
   })
 
   it('includes the recipe name in the tile', () => {

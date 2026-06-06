@@ -1,6 +1,6 @@
 import type { Message, MessageResponse } from '../types'
 import { handleSendMagicLink, handleAuthCallback, handleGetSession, handleSignOut, handleSetUsername } from './auth'
-import { handleGetReviews, handleAddReview, handleVote, handleGetTrending } from './api'
+import { handleGetReviews, handleAddReview, handleVote, handleUpdateReview, handleDeleteReview, handleGetTrending } from './api'
 import { supabase } from './supabase'
 
 export async function handleMessage(message: Message): Promise<MessageResponse<unknown>> {
@@ -11,9 +11,11 @@ export async function handleMessage(message: Message): Promise<MessageResponse<u
       case 'getSession':     return handleGetSession()
       case 'signOut':        return handleSignOut()
       case 'setUsername':    return handleSetUsername(message.username)
-      case 'getReviews':     return handleGetReviews(message.cookidooId, message.domain)
+      case 'getReviews':     return handleGetReviews(message.cookidooId)
       case 'addReview':      return handleAddReview(message)
       case 'vote':           return handleVote(message.reviewId, message.value)
+      case 'updateReview':   return handleUpdateReview(message)
+      case 'deleteReview':   return handleDeleteReview(message)
       case 'getTrending':    return handleGetTrending()
       default: {
         const exhaustive: never = message

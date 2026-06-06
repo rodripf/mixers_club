@@ -16,8 +16,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@supabase/supabase-js": "^2.107.0",
-    "blueimp-md5": "^2.19.0"
+    "@supabase/supabase-js": "^2.107.0"
   },
   "devDependencies": {
     "@types/blueimp-md5": "^2.18.2",

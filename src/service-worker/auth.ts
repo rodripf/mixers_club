@@ -1,6 +1,11 @@
 import type { MessageResponse, Session } from '../types'
 import { supabase } from './supabase'
 
+async function sha256hex(text: string): Promise<string> {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text.trim().toLowerCase()))
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('')
+}
+
 export async function handleSendMagicLink(email: string): Promise<MessageResponse> {
   const redirectTo = `chrome-extension://${chrome.runtime.id}/auth-callback.html`
   const { error } = await supabase.auth.signInWithOtp({
@@ -59,10 +64,11 @@ export async function handleSetUsername(username: string): Promise<MessageRespon
   if (sessionError) return { data: null, error: sessionError.message }
   if (!data.session) return { data: null, error: 'Not authenticated' }
 
+  const email_hash = await sha256hex(data.session.user.email ?? '')
   const { error } = await supabase.from('users').upsert({
     id: data.session.user.id,
     username: trimmed,
-    email: data.session.user.email ?? '',
+    email_hash,
   })
   if (error) return { data: null, error: error.message }
   return { data: undefined, error: null }

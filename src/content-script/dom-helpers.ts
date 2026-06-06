@@ -1,5 +1,3 @@
-import md5 from 'blueimp-md5'
-
 export function waitForElement(selector: string, timeout = 10000): Promise<Element> {
   return new Promise((resolve, reject) => {
     const existing = document.querySelector(selector)
@@ -24,7 +22,14 @@ export function waitForElement(selector: string, timeout = 10000): Promise<Eleme
   })
 }
 
-export function gravatarUrl(email: string, size = 48): string {
-  const hash = md5(email.trim().toLowerCase())
-  return `https://www.gravatar.com/avatar/${hash}?d=identicon&s=${size}`
+export function gravatarUrl(emailHash: string, size = 48): string {
+  return `https://www.gravatar.com/avatar/${emailHash}?d=identicon&s=${size}`
+}
+
+export async function translateText(text: string, targetLang: string): Promise<string> {
+  const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${targetLang}&dt=t&q=${encodeURIComponent(text)}`
+  const resp = await fetch(url)
+  if (!resp.ok) throw new Error(`${resp.status}`)
+  const data = await resp.json() as Array<unknown>
+  return (data[0] as Array<[string]>).map(chunk => chunk[0]).join('')
 }

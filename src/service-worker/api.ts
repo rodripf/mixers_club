@@ -1,6 +1,28 @@
 import type { Message, MessageResponse, Review, TrendingRecipe } from '../types'
 import { supabase } from './supabase'
 
+const REVIEWS_TTL = 24 * 60 * 60 * 1000 // 1 day
+
+function reviewsCacheKey(cookidooId: string): string {
+  return `mc_reviews_${cookidooId}`
+}
+
+async function getCachedReviews(cookidooId: string): Promise<Review[] | null> {
+  const key = reviewsCacheKey(cookidooId)
+  const stored = await chrome.storage.local.get(key)
+  const cached = stored[key] as { data: Review[]; ts: number } | undefined
+  if (cached && Date.now() - cached.ts < REVIEWS_TTL) return cached.data
+  return null
+}
+
+async function cacheReviews(cookidooId: string, data: Review[]): Promise<void> {
+  await chrome.storage.local.set({ [reviewsCacheKey(cookidooId)]: { data, ts: Date.now() } })
+}
+
+async function invalidateReviewsCache(cookidooId: string): Promise<void> {
+  await chrome.storage.local.remove(reviewsCacheKey(cookidooId))
+}
+
 function isHidden(review: Review): boolean {
   const netScore = review.likes - review.dislikes
   const total = review.likes + review.dislikes
@@ -8,13 +30,16 @@ function isHidden(review: Review): boolean {
   return netScore < -3 && dislikeRatio > 0.5
 }
 
-export async function handleGetReviews(cookidooId: string, domain: string): Promise<MessageResponse<Review[]>> {
+export async function handleGetReviews(cookidooId: string): Promise<MessageResponse<Review[]>> {
+  const cached = await getCachedReviews(cookidooId)
+  if (cached) return { data: cached, error: null }
+
   const { data, error } = await supabase.rpc('get_reviews_for_recipe', {
     p_cookidoo_id: cookidooId,
-    p_domain: domain,
   })
   if (error) return { data: null, error: error.message }
   const visible = (data as Review[]).filter(r => !isHidden(r))
+  await cacheReviews(cookidooId, visible)
   return { data: visible, error: null }
 }
 
@@ -25,7 +50,7 @@ export async function handleAddReview(
   const { data: recipe, error: recipeErr } = await supabase
     .from('recipes')
     .upsert(
-      { cookidoo_id: msg.cookidooId, domain: msg.domain, name: msg.recipeName },
+      { cookidoo_id: msg.cookidooId, domain: msg.domain, name: msg.recipeName, image_url: msg.imageUrl ?? null },
       { onConflict: 'cookidoo_id,domain' }
     )
     .select('id')
@@ -49,10 +74,12 @@ export async function handleAddReview(
     .single()
   if (reviewErr) return { data: null, error: reviewErr.message }
 
+  await invalidateReviewsCache(msg.cookidooId)
+
   // Fetch username + email for immediate card rendering
   const { data: profile, error: profileErr } = await supabase
     .from('users')
-    .select('username, email')
+    .select('username, email_hash')
     .eq('id', sessionData.session.user.id)
     .single()
   if (profileErr) console.error('[Mixers Club] profile fetch after review insert:', profileErr.message)
@@ -61,7 +88,7 @@ export async function handleAddReview(
     data: {
       ...review,
       username: profile?.username ?? '',
-      email: profile?.email ?? '',
+      email_hash: profile?.email_hash ?? '',
       likes: 0,
       dislikes: 0,
       user_vote: null,
@@ -70,23 +97,77 @@ export async function handleAddReview(
   }
 }
 
-export async function handleVote(reviewId: string, value: 1 | -1): Promise<MessageResponse> {
+export async function handleVote(reviewId: string, value: 1 | -1 | 0): Promise<MessageResponse> {
+  const { data: sessionData, error: sessionError } = await supabase.auth.getSession()
+  if (sessionError) return { data: null, error: sessionError.message }
+  if (!sessionData.session) return { data: null, error: 'Not authenticated' }
+
+  if (value === 0) {
+    const { error } = await supabase
+      .from('votes')
+      .delete()
+      .eq('review_id', reviewId)
+      .eq('user_id', sessionData.session.user.id)
+    if (error) return { data: null, error: error.message }
+  } else {
+    const { error } = await supabase
+      .from('votes')
+      .upsert(
+        { review_id: reviewId, user_id: sessionData.session.user.id, value },
+        { onConflict: 'review_id,user_id' }
+      )
+    if (error) return { data: null, error: error.message }
+  }
+  return { data: undefined, error: null }
+}
+
+export async function handleUpdateReview(
+  msg: Extract<Message, { action: 'updateReview' }>
+): Promise<MessageResponse> {
   const { data: sessionData, error: sessionError } = await supabase.auth.getSession()
   if (sessionError) return { data: null, error: sessionError.message }
   if (!sessionData.session) return { data: null, error: 'Not authenticated' }
 
   const { error } = await supabase
-    .from('votes')
-    .upsert(
-      { review_id: reviewId, user_id: sessionData.session.user.id, value },
-      { onConflict: 'review_id,user_id' }
-    )
+    .from('reviews')
+    .update({ type: msg.type, body: msg.body, stars: msg.stars })
+    .eq('id', msg.reviewId)
+    .eq('user_id', sessionData.session.user.id)
   if (error) return { data: null, error: error.message }
+  await invalidateReviewsCache(msg.cookidooId)
   return { data: undefined, error: null }
 }
 
+export async function handleDeleteReview(
+  msg: Extract<Message, { action: 'deleteReview' }>
+): Promise<MessageResponse> {
+  const { data: sessionData, error: sessionError } = await supabase.auth.getSession()
+  if (sessionError) return { data: null, error: sessionError.message }
+  if (!sessionData.session) return { data: null, error: 'Not authenticated' }
+
+  const { error } = await supabase
+    .from('reviews')
+    .delete()
+    .eq('id', msg.reviewId)
+    .eq('user_id', sessionData.session.user.id)
+  if (error) return { data: null, error: error.message }
+  await invalidateReviewsCache(msg.cookidooId)
+  return { data: undefined, error: null }
+}
+
+const TRENDING_CACHE_KEY = 'mc_trending_cache'
+const TRENDING_TTL = 24 * 60 * 60 * 1000 // 1 day
+
 export async function handleGetTrending(): Promise<MessageResponse<TrendingRecipe[]>> {
+  const stored = await chrome.storage.local.get(TRENDING_CACHE_KEY)
+  const cached = stored[TRENDING_CACHE_KEY] as { data: TrendingRecipe[]; ts: number } | undefined
+  if (cached && Date.now() - cached.ts < TRENDING_TTL) {
+    return { data: cached.data, error: null }
+  }
+
   const { data, error } = await supabase.rpc('get_trending_recipes', { p_limit: 10 })
   if (error) return { data: null, error: error.message }
+
+  await chrome.storage.local.set({ [TRENDING_CACHE_KEY]: { data, ts: Date.now() } })
   return { data: data as TrendingRecipe[], error: null }
 }
