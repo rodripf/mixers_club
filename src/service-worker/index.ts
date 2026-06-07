@@ -6,7 +6,7 @@ import { supabase } from './supabase'
 export async function handleMessage(message: Message): Promise<MessageResponse<unknown>> {
   try {
     switch (message.action) {
-      case 'sendMagicLink':  return handleSendMagicLink(message.email)
+      case 'sendMagicLink':  return handleSendMagicLink(message.email, message.redirectTo)
       case 'authCallback':   return handleAuthCallback(message.token)
       case 'getSession':     return handleGetSession()
       case 'signOut':        return handleSignOut()

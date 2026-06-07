@@ -27,7 +27,7 @@ export interface TrendingRecipe {
 
 // All messages from content script to service worker
 export type Message =
-  | { action: 'sendMagicLink'; email: string }
+  | { action: 'sendMagicLink'; email: string; redirectTo: string }
   | { action: 'authCallback'; token: string }
   | { action: 'getSession' }
   | { action: 'signOut' }

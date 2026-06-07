@@ -119,7 +119,7 @@ export function showAuthModal(onAuthenticated: () => void): void {
       btn.disabled = true
       btn.textContent = t('authSending')
       errorEl.style.display = 'none'
-      const result = await send({ action: 'sendMagicLink', email })
+      const result = await send({ action: 'sendMagicLink', email, redirectTo: window.location.href })
       if (result.error) {
         errorEl.textContent = friendlyError(result.error ?? '')
         errorEl.style.display = ''

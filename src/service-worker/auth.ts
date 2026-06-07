@@ -6,8 +6,7 @@ async function sha256hex(text: string): Promise<string> {
   return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('')
 }
 
-export async function handleSendMagicLink(email: string): Promise<MessageResponse> {
-  const redirectTo = `chrome-extension://${chrome.runtime.id}/auth-callback.html`
+export async function handleSendMagicLink(email: string, redirectTo: string): Promise<MessageResponse> {
   const { error } = await supabase.auth.signInWithOtp({
     email,
     options: { shouldCreateUser: true, emailRedirectTo: redirectTo },
