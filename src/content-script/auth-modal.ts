@@ -139,7 +139,7 @@ export function showAuthModal(onAuthenticated: () => void): void {
     privacyLink.target = '_blank'
     privacyLink.rel = 'noopener noreferrer'
     privacyLink.textContent = 'Privacy Policy'
-    privacyLink.style.cssText = 'color:#6b7280;text-decoration:underline'
+    privacyLink.style.cssText = 'color:#6b7280;text-decoration:underline;font-size:0.78rem'
     privacyNote.appendChild(privacyLink)
 
     content.appendChild(emailInput)
