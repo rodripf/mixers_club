@@ -1,10 +1,16 @@
 {
   "manifest_version": 3,
   "name": "Mixers Club",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Community reviews and trending recipes for Cookidoo",
-  "icons": { "16": "icon16.png", "48": "icon48.png", "128": "icon128.png" },
-  "permissions": ["storage"],
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
+  "permissions": [
+    "storage"
+  ],
   "host_permissions": [
     "*://translate.googleapis.com/*",
     "*://*.cookidoo.com/*",
@@ -29,31 +35,41 @@
     "service_worker": "service-worker.js",
     "type": "module"
   },
-  "content_scripts": [{
-    "matches": [
-      "*://*.cookidoo.com/*",
-      "*://*.cookidoo.es/*",
-      "*://*.cookidoo.de/*",
-      "*://*.cookidoo.fr/*",
-      "*://*.cookidoo.it/*",
-      "*://*.cookidoo.co.uk/*",
-      "*://*.cookidoo.com.au/*",
-      "*://*.cookidoo.co.nz/*",
-      "*://*.cookidoo.jp/*",
-      "*://*.cookidoo.com.br/*",
-      "*://*.cookidoo.be/*",
-      "*://*.cookidoo.nl/*",
-      "*://*.cookidoo.pt/*",
-      "*://*.cookidoo.ch/*",
-      "*://*.cookidoo.at/*",
-      "*://*.cookidoo.mx/*",
-      "*://*.cookidoo.ca/*"
-    ],
-    "js": ["content-script.js"],
-    "run_at": "document_idle"
-  }],
-  "web_accessible_resources": [{
-    "resources": ["auth-callback.html"],
-    "matches": ["https://*.supabase.co/*"]
-  }]
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.cookidoo.com/*",
+        "*://*.cookidoo.es/*",
+        "*://*.cookidoo.de/*",
+        "*://*.cookidoo.fr/*",
+        "*://*.cookidoo.it/*",
+        "*://*.cookidoo.co.uk/*",
+        "*://*.cookidoo.com.au/*",
+        "*://*.cookidoo.co.nz/*",
+        "*://*.cookidoo.jp/*",
+        "*://*.cookidoo.com.br/*",
+        "*://*.cookidoo.be/*",
+        "*://*.cookidoo.nl/*",
+        "*://*.cookidoo.pt/*",
+        "*://*.cookidoo.ch/*",
+        "*://*.cookidoo.at/*",
+        "*://*.cookidoo.mx/*",
+        "*://*.cookidoo.ca/*"
+      ],
+      "js": [
+        "content-script.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "auth-callback.html"
+      ],
+      "matches": [
+        "https://*.supabase.co/*"
+      ]
+    }
+  ]
 }
