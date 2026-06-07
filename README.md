@@ -25,6 +25,14 @@ The extension UI is available in English, Spanish, Portuguese, and Italian. It a
 
 ---
 
+## Screenshots
+
+![Recipe page with community reviews](public/screenshots/recipe-page-detail.jpg)
+
+See more: [Login](public/screenshots/login.jpg) · [Username setup](public/screenshots/username.jpg) · [Recipe page](public/screenshots/recipe-page.jpg) · [Trending recipes](public/screenshots/trending.jpg)
+
+---
+
 ## Installation
 
 ### From the Chrome Web Store
