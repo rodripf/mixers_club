@@ -15,7 +15,7 @@ A Chrome extension that adds a community layer to [Cookidoo](https://cookidoo.co
 - **Translate** — one-click translation of reviews in other languages via Google Translate
 - **Multi-locale** — works across all Cookidoo domains (ES, DE, FR, IT, UK, AU, NZ, JP, BR, BE, NL, PT, CH, AT, MX, CA) and shows reviews from all locales regardless of which domain you're on
 - **Passwordless auth** — sign in with a magic link, no password required
-- **Privacy-first** — your email is never stored; only a one-way SHA-256 hash is kept for avatar display
+- **Privacy-first** — your email is used only for authentication; a one-way SHA-256 hash is stored for avatar display
 
 ---
 
@@ -138,7 +138,7 @@ The following is strictly prohibited: hate speech, discrimination, harassment, c
 
 ## Privacy
 
-We do not collect telemetry, analytics, or browsing data. Your email is never stored — only a one-way cryptographic hash. See [PRIVACY.md](PRIVACY.md) for the full privacy policy.
+We do not collect telemetry, analytics, or browsing data. Your email is used for authentication via Supabase. See [PRIVACY.md](PRIVACY.md) for the full privacy policy.
 
 ---
 

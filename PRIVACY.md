@@ -15,7 +15,8 @@ Mixers Club is an independent browser extension that adds community reviews and 
 We collect the minimum data necessary for the extension to function:
 
 - **Username** — the display name you choose when you sign up. Stored in our database.
-- **Email hash** — a one-way cryptographic hash (SHA-256) of your email address, used solely to display your Gravatar avatar. We **never** store your plain email address. The hash cannot be reversed to recover your email.
+- **Email address** — stored by our authentication provider (Supabase) to send you the magic link and maintain your session. See Section 5 for details.
+- **Email hash** — a one-way cryptographic hash (SHA-256) of your email address, used solely to display your Gravatar avatar. The hash cannot be reversed to recover your email.
 - **Reviews** — the text, star rating, and type you submit. These are public and attributed to your username.
 - **Votes** — your like or dislike on each review. Stored anonymously against your user ID.
 
@@ -23,7 +24,7 @@ We collect the minimum data necessary for the extension to function:
 
 ## 3. What We Do Not Collect
 
-- We do **not** collect your plain email address at any point after authentication.
+- We do **not** store your email address in our own database — it is held solely by Supabase for authentication purposes.
 - We do **not** collect any browsing history, page content, or activity on Cookidoo beyond what you explicitly submit through the extension.
 - We do **not** collect any telemetry, analytics, crash reports, or usage statistics.
 - We do **not** use cookies, tracking pixels, or any third-party tracking technology.
@@ -32,7 +33,7 @@ We collect the minimum data necessary for the extension to function:
 
 ## 4. Authentication
 
-Sign-in is handled via magic link (passwordless email). Your email is used by our authentication partner to send you the sign-in link and to maintain your session. We do not receive or store the plain email — only the hash described above is retained in our database after the initial authentication step.
+Sign-in is handled via magic link (passwordless email). Your email address is stored by Supabase, our authentication provider, in order to send you the sign-in link and maintain your session. We store only a one-way SHA-256 hash of your email in our own database, used solely for your Gravatar avatar.
 
 ---
 
@@ -54,7 +55,7 @@ The "Translate" button uses an unofficial Google Translate endpoint. If you clic
 
 ## 6. Data Retention and Deletion
 
-Your account and all associated data (username, email hash, reviews, votes) remain stored until you request deletion. To request deletion of your account and data, contact us at the address below.
+Your account and all associated data (username, email hash, reviews, votes) remain stored until you request deletion. Your email address held by Supabase is subject to their own retention and deletion policies. To request deletion of your account and data, contact us at the address below.
 
 ---
 
