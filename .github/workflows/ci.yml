@@ -33,11 +33,11 @@ jobs:
         run: pnpm run typecheck
 
       - name: Test
-        run: pnpm run test -- --reporter=json --outputFile=test-results.json
+        run: pnpm run test 2>&1 | tee test-output.txt
 
       - name: Generate test badge
         run: |
-          TESTS=$(node -e "const r=require('./test-results.json'); console.log(r.numPassedTests)")
+          TESTS=$(grep -oP 'Tests\s+\K[0-9]+(?= passed)' test-output.txt || echo "0")
           mkdir -p .github/badges
           echo "{\"schemaVersion\":1,\"label\":\"tests\",\"message\":\"$TESTS passing\",\"color\":\"brightgreen\"}" > .github/badges/tests.json
 
