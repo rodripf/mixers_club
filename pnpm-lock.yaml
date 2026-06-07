@@ -12,9 +12,6 @@ importers:
         specifier: ^2.107.0
         version: 2.107.0
     devDependencies:
-      '@types/blueimp-md5':
-        specifier: ^2.18.2
-        version: 2.18.2
       '@types/chrome':
         specifier: ^0.1.42
         version: 0.1.42
@@ -282,9 +279,6 @@ packages:
 
   '@tybys/wasm-util@0.10.2':
     resolution: {integrity: sha512-RoBvJ2X0wuKlWFIjrwffGw1IqZHKQqzIchKaadZZfnNpsAYp2mM0h36JtPCjNDAHGgYez/15uMBpfGwchhiMgg==}
-
-  '@types/blueimp-md5@2.18.2':
-    resolution: {integrity: sha512-dJ9yRry9Olt5GAWlgCtE5dK9d/Dfhn/V7hna86eEO2Pn76+E8Y0S0n61iEUEGhWXXgtKtHxtZLVNwL8X+vLHzg==}
 
   '@types/chai@5.2.3':
     resolution: {integrity: sha512-Mw558oeA9fFbv65/y4mHtXDs9bPnFMZAL/jxdPFUpOHHIXX91mcgEHbS5Lahr+pwZFR8A7GQleRWeI6cGFC2UA==}
@@ -956,8 +950,6 @@ snapshots:
     dependencies:
       tslib: 2.8.1
     optional: true
-
-  '@types/blueimp-md5@2.18.2': {}
 
   '@types/chai@5.2.3':
     dependencies:

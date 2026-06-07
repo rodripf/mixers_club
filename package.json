@@ -19,7 +19,6 @@
     "@supabase/supabase-js": "^2.107.0"
   },
   "devDependencies": {
-    "@types/blueimp-md5": "^2.18.2",
     "@types/chrome": "^0.1.42",
     "@types/node": "^25.9.1",
     "@vitest/coverage-v8": "^4.1.8",
