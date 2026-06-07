@@ -8,7 +8,6 @@ export default defineConfig({
       input: {
         'service-worker': resolve(import.meta.dirname, 'src/service-worker/index.ts'),
         'content-script': resolve(import.meta.dirname, 'src/content-script/index.ts'),
-        'auth-callback': resolve(import.meta.dirname, 'src/auth-callback/index.ts'),
       },
       output: {
         entryFileNames: '[name].js',

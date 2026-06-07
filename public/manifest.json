@@ -63,14 +63,4 @@
       "run_at": "document_idle"
     }
   ],
-  "web_accessible_resources": [
-    {
-      "resources": [
-        "auth-callback.html"
-      ],
-      "matches": [
-        "https://*.supabase.co/*"
-      ]
-    }
-  ]
 }
