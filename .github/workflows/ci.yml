@@ -37,7 +37,9 @@ jobs:
 
       - name: Generate test badge
         run: |
-          TESTS=$(grep -oP 'Tests\s+\K[0-9]+(?= passed)' test-output.txt || echo "0")
+          CLEAN=$(sed 's/\x1b\[[0-9;]*m//g' test-output.txt)
+          TESTS=$(echo "$CLEAN" | grep -oE '[0-9]+ passed' | grep -oE '[0-9]+' | tail -1)
+          TESTS=${TESTS:-0}
           mkdir -p .github/badges
           echo "{\"schemaVersion\":1,\"label\":\"tests\",\"message\":\"$TESTS passing\",\"color\":\"brightgreen\"}" > .github/badges/tests.json
 
