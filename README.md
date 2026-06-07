@@ -1,5 +1,9 @@
 # Mixers Club
 
+[![CI](https://github.com/rodripf/mixers_club/actions/workflows/ci.yml/badge.svg)](https://github.com/rodripf/mixers_club/actions/workflows/ci.yml)
+[![Version](https://img.shields.io/github/v/release/rodripf/mixers_club)](https://github.com/rodripf/mixers_club/releases/latest)
+[![Tests](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/rodripf/mixers_club/master/.github/badges/tests.json)](https://github.com/rodripf/mixers_club/actions/workflows/ci.yml)
+
 A Chrome extension that adds a community layer to [Cookidoo](https://cookidoo.com) — the official Thermomix recipe platform. Browse community reviews on recipe pages, see trending recipes voted by fellow Thermomix users, and contribute your own tips and variations.
 
 > **Disclaimer:** Mixers Club is an independent community project and is not affiliated with, endorsed by, or in any way related to Thermomix®, Vorwerk®, or Cookidoo®.

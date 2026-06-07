@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Typecheck
+        run: pnpm run typecheck
+
+      - name: Test
+        run: pnpm run test -- --reporter=json --outputFile=test-results.json
+
+      - name: Generate test badge
+        run: |
+          TESTS=$(node -e "const r=require('./test-results.json'); console.log(r.numPassedTests)")
+          mkdir -p .github/badges
+          echo "{\"schemaVersion\":1,\"label\":\"tests\",\"message\":\"$TESTS passing\",\"color\":\"brightgreen\"}" > .github/badges/tests.json
+
+      - name: Commit test badge
+        if: github.ref == 'refs/heads/master'
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add .github/badges/tests.json
+          git diff --staged --quiet || (git commit -m "chore: update test badge [skip ci]" && git push)
