@@ -53,7 +53,7 @@ export function buildReviewForm(opts: FormOptions): HTMLElement {
     btn.type = 'button'
     btn.className = 'core-chip-button core-chip-button--flat core-chip-button--x-small'
     btn.dataset['mcType'] = type
-    btn.textContent = typeLabels[type]
+    btn.textContent = typeLabels[type] ?? type
     setChipActive(btn, type === selectedType)
     btn.addEventListener('click', () => {
       selectedType = type

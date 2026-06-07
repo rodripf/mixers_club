@@ -24,7 +24,7 @@ describe('handleSendMagicLink', () => {
   it('calls supabase signInWithOtp with the email', async () => {
     mockSignInWithOtp.mockResolvedValue({ error: null })
     const { handleSendMagicLink } = await import('../../src/service-worker/auth')
-    const result = await handleSendMagicLink('test@example.com')
+    const result = await handleSendMagicLink('test@example.com', 'https://cookidoo.com/recipe')
     expect(mockSignInWithOtp).toHaveBeenCalledWith({
       email: 'test@example.com',
       options: expect.objectContaining({ shouldCreateUser: true }),
@@ -35,7 +35,7 @@ describe('handleSendMagicLink', () => {
   it('returns error when supabase fails', async () => {
     mockSignInWithOtp.mockResolvedValue({ error: { message: 'rate limited' } })
     const { handleSendMagicLink } = await import('../../src/service-worker/auth')
-    const result = await handleSendMagicLink('test@example.com')
+    const result = await handleSendMagicLink('test@example.com', 'https://cookidoo.com/recipe')
     expect(result.error).toBe('rate limited')
   })
 })

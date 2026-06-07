@@ -16,7 +16,7 @@ async function fetchOfficialRating(locale: string, cookidooId: string): Promise<
     const resp = await fetch(`/recipes/recipe/${locale}/${cookidooId}`, { credentials: 'include' })
     const html = await resp.text()
     const match = html.match(/class="core-rating__counter[^"]*"[^>]*>([^<]+)</)
-    return match ? match[1].trim() : null
+    return match ? match[1]!.trim() : null
   } catch {
     return null
   }

@@ -118,7 +118,7 @@ function showReviewModal(
 
   let modalTranslated = false
   let modalTranslatedText: string | null = null
-  const targetLang = navigator.language.split('-')[0]
+  const targetLang = navigator.language.split('-')[0] ?? 'en'
 
   modalTranslateBtn.addEventListener('click', async () => {
     if (modalTranslated) {
@@ -131,7 +131,7 @@ function showReviewModal(
     modalTranslateBtn.textContent = t('translating')
     try {
       if (!modalTranslatedText) modalTranslatedText = await translateText(review.body, targetLang)
-      bodyEl.textContent = modalTranslatedText
+      bodyEl.textContent = modalTranslatedText ?? review.body
       modalTranslateBtn.textContent = t('showOriginal')
       modalTranslated = true
     } catch {
@@ -276,7 +276,7 @@ export function renderReviewCard(review: Review, currentUserId?: string): HTMLEl
 
   let translated = false
   let translatedText: string | null = null
-  const targetLang = navigator.language.split('-')[0]
+  const targetLang = navigator.language.split('-')[0] ?? 'en'
 
   translateBtn.addEventListener('click', async () => {
     if (translated) {
@@ -289,7 +289,7 @@ export function renderReviewCard(review: Review, currentUserId?: string): HTMLEl
     translateBtn.textContent = t('translating')
     try {
       if (!translatedText) translatedText = await translateText(review.body, targetLang)
-      body.textContent = translatedText
+      body.textContent = translatedText ?? review.body
       translateBtn.textContent = t('showOriginal')
       translated = true
     } catch {
@@ -435,7 +435,7 @@ export function buildReviewsSection(
     const btn = document.createElement('button')
     btn.className = 'core-chip-button core-chip-button--flat core-chip-button--x-small'
     btn.dataset['mcFilter'] = type
-    btn.textContent = chipLabels[type]
+    btn.textContent = chipLabels[type] ?? type
     setFilterChipActive(btn, i === 0)
     chipsDiv.appendChild(btn)
   })
