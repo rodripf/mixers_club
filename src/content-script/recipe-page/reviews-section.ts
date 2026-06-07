@@ -264,7 +264,7 @@ export function renderReviewCard(review: Review, currentUserId?: string): HTMLEl
 
   if (review.body.length > 150) {
     const viewMoreBtn = document.createElement('button')
-    viewMoreBtn.style.cssText = 'background:none;border:none;padding:0;color:#2563eb;font-size:0.8rem;cursor:pointer;text-decoration:underline;font-weight:normal;align-self:flex-end;text-transform:none'
+    viewMoreBtn.style.cssText = 'background:none;border:none;padding:0;color:#2563eb;font-size:0.8rem;cursor:pointer;text-decoration:underline;font-weight:normal;align-self:flex-end;text-transform:none!important'
     viewMoreBtn.textContent = t('viewMore')
     viewMoreBtn.addEventListener('click', () => showReviewModal(review, likeBtn, dislikeBtn))
     viewDiv.appendChild(viewMoreBtn)
@@ -401,7 +401,7 @@ export function buildReviewsSection(
 
     const signOutBtn = document.createElement('button')
     signOutBtn.id = 'mc-sign-out'
-    signOutBtn.style.cssText = 'background:none;border:none;padding:0;color:#6b7280;font-size:0.8rem;cursor:pointer;text-decoration:underline;text-transform:none'
+    signOutBtn.style.cssText = 'background:none;border:none;padding:0;color:#6b7280;font-size:0.8rem;cursor:pointer;text-decoration:underline;text-transform:none!important'
     signOutBtn.textContent = t('signOut')
     signOutBtn.addEventListener('click', () => onSignOut?.())
 
