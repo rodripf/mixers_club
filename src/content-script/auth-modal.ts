@@ -165,7 +165,7 @@ export function showAuthModal(onAuthenticated: () => void): void {
 
     const senderNote = document.createElement('p')
     senderNote.style.cssText = 'margin:0 0 16px;font-size:0.78rem;color:#9ca3af;text-align:center;line-height:1.4'
-    senderNote.textContent = 'Expect the email from noreply@mail.app.supabase.io'
+    senderNote.textContent = 'Expect the email from onboarding@resend.dev'
     content.appendChild(senderNote)
 
     const btn = makeBtn(t('authClickedLink'))
