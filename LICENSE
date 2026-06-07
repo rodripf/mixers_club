@@ -18,22 +18,5 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 ---
 
-ADDITIONAL TERMS
-
-Pursuant to Section 7 of the GNU General Public License version 3,
-the following additional terms apply:
-
-1. You may convey a work based on the Program under this License without
-   the requirement to also convey source code for works it does not contain.
-
-2. If you modify the Program, you must mark the modified files with notices
-   stating that you changed the files and the date of any change.
-
-3. If the Program normally reads commands interactively when run, you must
-   make it output a notice when it starts in an interactive mode that informs
-   the user of the conditions and how to view and/or change its settings.
-
----
-
 For a copy of the full GNU General Public License, see:
 https://www.gnu.org/licenses/gpl-3.0.html

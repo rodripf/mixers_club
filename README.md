@@ -76,6 +76,15 @@ pnpm run test        # Run test suite (Vitest)
 pnpm run typecheck   # TypeScript type checking
 ```
 
+### How this was built
+
+This project was created using **Claude Code** with the **obra/superpowers** plugin. Design specs, implementation plans, and architectural decisions can be found in the `docs/` directory:
+
+- `docs/superpowers/specs/` — detailed design specifications
+- `docs/superpowers/plans/` — task-by-task implementation plans
+
+These documents provide full context on the feature development process and technical decisions made throughout the project.
+
 ### Project structure
 
 ```
@@ -127,4 +136,4 @@ We do not collect telemetry, analytics, or browsing data. Your email is never st
 
 ## License
 
-[MIT](LICENSE)
+GNU GPLv3
