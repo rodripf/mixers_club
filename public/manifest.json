@@ -3,6 +3,7 @@
   "name": "Mixers Club",
   "version": "0.2.0",
   "description": "Community reviews and trending recipes for Cookidoo",
+  "homepage_url": "https://github.com/rodripf/mixers_club/blob/master/PRIVACY.md",
   "icons": {
     "16": "icon16.png",
     "48": "icon48.png",

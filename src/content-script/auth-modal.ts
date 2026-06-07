@@ -131,7 +131,19 @@ export function showAuthModal(onAuthenticated: () => void): void {
     })
     emailInput.addEventListener('keydown', e => { if (e.key === 'Enter') btn.click() })
 
+    const privacyNote = document.createElement('p')
+    privacyNote.style.cssText = 'margin:-4px 0 12px;font-size:0.78rem;color:#9ca3af;line-height:1.4'
+    privacyNote.textContent = 'Your email is used for login only. '
+    const privacyLink = document.createElement('a')
+    privacyLink.href = 'https://github.com/rodripf/mixers_club/blob/master/PRIVACY.md'
+    privacyLink.target = '_blank'
+    privacyLink.rel = 'noopener noreferrer'
+    privacyLink.textContent = 'Privacy Policy'
+    privacyLink.style.cssText = 'color:#6b7280;text-decoration:underline'
+    privacyNote.appendChild(privacyLink)
+
     content.appendChild(emailInput)
+    content.appendChild(privacyNote)
     content.appendChild(errorEl)
     content.appendChild(btn)
   }

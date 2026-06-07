@@ -72,6 +72,18 @@ export async function initRecipePage(cookidooId: string, domain: string): Promis
       const target = e.target as Element
 
       const voteBtn = target.closest<HTMLButtonElement>('.mc-vote-btn')
+      if (voteBtn && !authenticated) {
+        const existing = voteBtn.parentElement?.querySelector('.mc-vote-hint')
+        if (!existing) {
+          const hint = document.createElement('span')
+          hint.className = 'mc-vote-hint'
+          hint.style.cssText = 'font-size:0.75rem;color:#6b7280;white-space:nowrap;animation:mc-fade-in .15s ease'
+          hint.textContent = t('loginToReview')
+          voteBtn.parentElement?.appendChild(hint)
+          setTimeout(() => hint.remove(), 2500)
+        }
+        return
+      }
       if (voteBtn && authenticated) {
         const card = voteBtn.closest<HTMLElement>('[data-mc-review]')!
         const reviewId = card.dataset['reviewId']!

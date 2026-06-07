@@ -359,7 +359,7 @@ export function buildReviewsSection(
   if (!document.getElementById('mc-styles')) {
     const style = document.createElement('style')
     style.id = 'mc-styles'
-    style.textContent = '#mc-reviews-content::-webkit-scrollbar{display:none}'
+    style.textContent = '#mc-reviews-content::-webkit-scrollbar{display:none}@keyframes mc-fade-in{from{opacity:0}to{opacity:1}}'
     document.head.appendChild(style)
   }
 

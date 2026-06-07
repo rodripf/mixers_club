@@ -5,14 +5,11 @@ const path = require('path');
 const { execSync } = require('child_process');
 const readline = require('readline');
 
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout
-});
-
 function askVersion() {
+  const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
   return new Promise((resolve) => {
     rl.question('Enter version number (e.g., 0.2.0): ', (answer) => {
+      rl.close();
       if (!answer.match(/^\d+\.\d+\.\d+$/)) {
         console.error('Invalid version format. Use semver (e.g., 0.2.0)');
         process.exit(1);
@@ -23,8 +20,19 @@ function askVersion() {
 }
 
 async function publish() {
-  const version = await askVersion();
-  rl.close();
+  // Accept version as CLI arg (for CI) or prompt interactively
+  const argVersion = process.argv[2];
+  let version;
+  if (argVersion) {
+    const clean = argVersion.replace(/^v/, '');
+    if (!clean.match(/^\d+\.\d+\.\d+$/)) {
+      console.error('Invalid version format. Use semver (e.g., 0.2.0 or v0.2.0)');
+      process.exit(1);
+    }
+    version = clean;
+  } else {
+    version = await askVersion();
+  }
 
   console.log(`\n📦 Publishing version ${version}...\n`);
 
