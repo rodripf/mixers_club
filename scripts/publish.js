@@ -62,37 +62,20 @@ async function publish() {
 
     console.log(`\n📦 Creating ${zipName}...`);
 
-    // Use built-in zip or cross-platform archiver
-    try {
-      if (process.platform === 'win32') {
-        // Windows: use PowerShell
-        execSync(
-          `powershell -NoProfile -Command "Compress-Archive -Path '${distPath}/*' -DestinationPath '${zipPath}' -Force"`,
-          { stdio: 'inherit' }
-        );
-      } else {
-        // Unix: use zip
-        execSync(`cd ${path.dirname(distPath)} && zip -r ${zipPath} dist/`, { stdio: 'inherit' });
-      }
-      console.log(`✓ Created ${zipName}`);
-    } catch (e) {
-      // Fallback: use archiver if zip command not available
-      console.log('Attempting to create zip with Node archiver...');
-      const archiver = require('archiver');
-      const output = fs.createWriteStream(zipPath);
-      const archive = archiver('zip', { zlib: { level: 9 } });
+    // Zip dist contents directly (no wrapping folder) using archiver
+    const archiver = require('archiver');
+    const output = fs.createWriteStream(zipPath);
+    const archive = archiver('zip', { zlib: { level: 9 } });
 
-      return new Promise((resolve, reject) => {
-        output.on('close', () => {
-          console.log(`✓ Created ${zipName}`);
-          resolve();
-        });
-        archive.on('error', reject);
-        archive.pipe(output);
-        archive.directory(distPath + '/', false);
-        archive.finalize();
-      });
-    }
+    await new Promise((resolve, reject) => {
+      output.on('close', resolve);
+      archive.on('error', reject);
+      archive.pipe(output);
+      // false = don't include the 'dist' folder itself, just its contents
+      archive.directory(distPath + '/', false);
+      archive.finalize();
+    });
+    console.log(`✓ Created ${zipName}`);
 
     console.log(`\n✅ Ready to publish!\n`);
     console.log(`📁 Package: ${zipName}`);
