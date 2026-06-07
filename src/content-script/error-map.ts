@@ -5,6 +5,6 @@ export function friendlyError(raw: string): string {
   if (raw.includes('users_username_key'))          return t('errUsernameTaken')
   if (raw.includes('users_username_check'))         return t('errInputTooLong')
   if (raw.includes('reviews_body_length_check'))    return t('errInputTooLong')
-  if (raw.includes('Email rate limit exceeded'))    return t('errEmailRateLimit')
+  if (/email rate limit|over_email_send_rate_limit|security purposes/i.test(raw)) return t('errEmailRateLimit')
   return t('errGeneric')
 }
