@@ -25,7 +25,7 @@ A Chrome extension that adds a community layer to [Cookidoo](https://cookidoo.co
 
 ## Supported Languages
 
-The extension UI is available in English, Spanish, Portuguese, and Italian. It auto-detects the language from your Cookidoo locale.
+The extension UI is available in English, Spanish, Portuguese, Italian, German, French, Dutch, and Japanese. It auto-detects the language from your Cookidoo locale.
 
 ---
 
@@ -41,7 +41,7 @@ See more: [Login](public/screenshots/login.jpg) · [Username setup](public/scree
 
 ### From the Chrome Web Store
 
-_Coming soon._
+[Install Mixers Club on the Chrome Web Store](https://chromewebstore.google.com/detail/mixers-club/khclelnkphbolaegfnfehihlnempngik)
 
 ### Load unpacked (development)
 
@@ -86,11 +86,12 @@ VITE_SUPABASE_ANON_KEY=your-anon-key
 pnpm run build       # Production build → dist/
 pnpm run test        # Run test suite (Vitest)
 pnpm run typecheck   # TypeScript type checking
+pnpm run publish     # Bump version, build, and package .zip for Chrome Web Store
 ```
 
 ### How this was built
 
-This project was created using **Claude Code** with the **obra/superpowers** plugin. Design specs, implementation plans, and architectural decisions can be found in the `docs/` directory:
+This project was created using **Claude Code** with the **[obra/superpowers](https://github.com/obra/superpowers)** plugin. Design specs, implementation plans, and architectural decisions can be found in the `docs/` directory:
 
 - `docs/superpowers/specs/` — detailed design specifications
 - `docs/superpowers/plans/` — task-by-task implementation plans
@@ -103,16 +104,17 @@ These documents provide full context on the feature development process and tech
 src/
 ├── content-script/
 │   ├── home-page/          # Trending section injected on the Cookidoo home page
-│   ├── recipe-page/        # Reviews section, review form, star watcher
+│   ├── recipe-page/        # Reviews section, review form, vote handling
 │   ├── auth-modal.ts       # Magic link sign-in modal
 │   ├── dom-helpers.ts      # Shared DOM utilities (Gravatar, translate)
 │   ├── error-map.ts        # Friendly Supabase error messages
-│   └── i18n.ts             # UI translations (EN/ES/PT/IT)
+│   ├── i18n.ts             # UI translations (EN/ES/PT/IT/DE/FR/NL/JA)
+│   └── index.ts            # Entry point — page detection and auth callback handling
 ├── service-worker/
 │   ├── api.ts              # Review, vote, and trending handlers
 │   ├── auth.ts             # Auth handlers (magic link, session, username)
+│   ├── index.ts            # Message router
 │   └── supabase.ts         # Supabase client (storage wired to chrome.storage.local)
-├── auth-callback/          # Magic link redirect handler
 └── types.ts                # Shared TypeScript types
 ```
 
@@ -148,4 +150,4 @@ We do not collect telemetry, analytics, or browsing data. Your email is used for
 
 ## License
 
-GNU GPLv3
+[GNU GPLv3](LICENSE)
