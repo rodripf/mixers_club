@@ -1,6 +1,6 @@
 import { defineConfig, type Plugin } from 'vite'
 import { resolve } from 'path'
-import { copyFileSync, existsSync, rmSync } from 'fs'
+import { copyFileSync, existsSync, mkdirSync, rmSync } from 'fs'
 
 function firefoxManifestPlugin(): Plugin {
   return {
@@ -10,6 +10,8 @@ function firefoxManifestPlugin(): Plugin {
       const src = resolve(import.meta.dirname, 'public', 'manifest.firefox.json')
       const dest = resolve(outDir, 'manifest.json')
       const stale = resolve(outDir, 'manifest.firefox.json')
+      if (!existsSync(src)) throw new Error(`Firefox manifest not found: ${src}`)
+      mkdirSync(outDir, { recursive: true })
       copyFileSync(src, dest)
       if (existsSync(stale)) rmSync(stale)
     },
