@@ -8,6 +8,8 @@
   },
   "scripts": {
     "build": "vite build",
+    "build:chrome": "vite build",
+    "build:firefox": "vite build --mode firefox",
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
