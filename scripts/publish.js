@@ -38,6 +38,10 @@ async function publish() {
   const args = process.argv.slice(2);
   const platformFlagIdx = args.indexOf('--platform');
   let platform = platformFlagIdx !== -1 ? args[platformFlagIdx + 1] : null;
+  if (platformFlagIdx !== -1 && !platform) {
+    console.error('--platform requires a value: chrome or firefox');
+    process.exit(1);
+  }
   const versionArg = args.find(a => !a.startsWith('--') && a !== platform);
 
   let version;
