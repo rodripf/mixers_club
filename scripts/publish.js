@@ -77,7 +77,8 @@ async function publish() {
 
     // Update the correct manifest
     const manifestFile = platform === 'firefox' ? 'manifest.firefox.json' : 'manifest.json';
-    const manifestPath = path.join(__dirname, '..', 'public', manifestFile);
+    const manifestDir = platform === 'firefox' ? 'config' : 'public';
+    const manifestPath = path.join(__dirname, '..', manifestDir, manifestFile);
     const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
     manifest.version = version;
     fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2) + '\n');
