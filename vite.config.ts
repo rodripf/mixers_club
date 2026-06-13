@@ -7,11 +7,16 @@ function firefoxManifestPlugin(): Plugin {
     name: 'firefox-manifest',
     closeBundle() {
       const outDir = resolve(import.meta.dirname, 'dist-firefox')
-      const src = resolve(import.meta.dirname, 'config', 'manifest.firefox.json')
-      const dest = resolve(outDir, 'manifest.json')
-      if (!existsSync(src)) throw new Error(`Firefox manifest not found: ${src}`)
+      const configDir = resolve(import.meta.dirname, 'config')
       mkdirSync(outDir, { recursive: true })
-      copyFileSync(src, dest)
+
+      const manifestSrc = resolve(configDir, 'manifest.firefox.json')
+      if (!existsSync(manifestSrc)) throw new Error(`Firefox manifest not found: ${manifestSrc}`)
+      copyFileSync(manifestSrc, resolve(outDir, 'manifest.json'))
+
+      const bgSrc = resolve(configDir, 'background.html')
+      if (!existsSync(bgSrc)) throw new Error(`Firefox background.html not found: ${bgSrc}`)
+      copyFileSync(bgSrc, resolve(outDir, 'background.html'))
     },
   }
 }

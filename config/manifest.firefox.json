@@ -39,8 +39,7 @@
     "*://*.cookidoo.ca/*"
   ],
   "background": {
-    "service_worker": "service-worker.js",
-    "type": "module"
+    "page": "background.html"
   },
   "content_scripts": [
     {
