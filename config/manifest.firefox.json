@@ -1,0 +1,71 @@
+{
+  "manifest_version": 3,
+  "name": "Mixers Club",
+  "version": "0.2.0",
+  "description": "Community reviews and trending recipes for Cookidoo",
+  "homepage_url": "https://github.com/rodripf/mixers_club/blob/master/PRIVACY.md",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "mixersclub@rodripf.com",
+      "strict_min_version": "128.0"
+    }
+  },
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
+  "permissions": [
+    "storage"
+  ],
+  "host_permissions": [
+    "*://translate.googleapis.com/*",
+    "*://*.cookidoo.com/*",
+    "*://*.cookidoo.es/*",
+    "*://*.cookidoo.de/*",
+    "*://*.cookidoo.fr/*",
+    "*://*.cookidoo.it/*",
+    "*://*.cookidoo.co.uk/*",
+    "*://*.cookidoo.com.au/*",
+    "*://*.cookidoo.co.nz/*",
+    "*://*.cookidoo.jp/*",
+    "*://*.cookidoo.com.br/*",
+    "*://*.cookidoo.be/*",
+    "*://*.cookidoo.nl/*",
+    "*://*.cookidoo.pt/*",
+    "*://*.cookidoo.ch/*",
+    "*://*.cookidoo.at/*",
+    "*://*.cookidoo.mx/*",
+    "*://*.cookidoo.ca/*"
+  ],
+  "background": {
+    "page": "background.html"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.cookidoo.com/*",
+        "*://*.cookidoo.es/*",
+        "*://*.cookidoo.de/*",
+        "*://*.cookidoo.fr/*",
+        "*://*.cookidoo.it/*",
+        "*://*.cookidoo.co.uk/*",
+        "*://*.cookidoo.com.au/*",
+        "*://*.cookidoo.co.nz/*",
+        "*://*.cookidoo.jp/*",
+        "*://*.cookidoo.com.br/*",
+        "*://*.cookidoo.be/*",
+        "*://*.cookidoo.nl/*",
+        "*://*.cookidoo.pt/*",
+        "*://*.cookidoo.ch/*",
+        "*://*.cookidoo.at/*",
+        "*://*.cookidoo.mx/*",
+        "*://*.cookidoo.ca/*"
+      ],
+      "js": [
+        "content-script.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ]
+}
