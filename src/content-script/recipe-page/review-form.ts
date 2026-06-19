@@ -144,7 +144,7 @@ export function buildReviewForm(opts: FormOptions): HTMLElement {
     } else if (isEdit) {
       opts.onCancel?.()
     } else {
-      const successEl = document.createElement('p'); successEl.textContent = t('formSuccess'); container.innerHTML = ''; container.appendChild(successEl)
+      const successEl = document.createElement('p'); successEl.textContent = t('formSuccess'); container.replaceChildren(successEl)
       setTimeout(() => opts.onCancel?.(), 1500)
     }
   })

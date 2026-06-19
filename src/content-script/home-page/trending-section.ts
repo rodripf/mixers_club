@@ -27,9 +27,20 @@ function makeArrowBtn(dir: 'left' | 'right'): HTMLButtonElement {
     'padding:0',
     'color:#374151',
   ].join(';')
-  btn.innerHTML = dir === 'left'
-    ? `<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L6 8L10 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`
-    : `<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 3L10 8L6 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`
+  const ns = 'http://www.w3.org/2000/svg'
+  const svg = document.createElementNS(ns, 'svg')
+  svg.setAttribute('width', '16')
+  svg.setAttribute('height', '16')
+  svg.setAttribute('viewBox', '0 0 16 16')
+  svg.setAttribute('fill', 'none')
+  const path = document.createElementNS(ns, 'path')
+  path.setAttribute('d', dir === 'left' ? 'M10 3L6 8L10 13' : 'M6 3L10 8L6 13')
+  path.setAttribute('stroke', 'currentColor')
+  path.setAttribute('stroke-width', '2')
+  path.setAttribute('stroke-linecap', 'round')
+  path.setAttribute('stroke-linejoin', 'round')
+  svg.appendChild(path)
+  btn.appendChild(svg)
   return btn
 }
 

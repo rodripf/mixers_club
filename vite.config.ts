@@ -21,6 +21,22 @@ function firefoxManifestPlugin(): Plugin {
   }
 }
 
+// Supabase Realtime has an optional @opentelemetry/api import guarded by @vite-ignore.
+// The package is not installed; replace the dynamic import with Promise.resolve(null)
+// so the bundle contains no runtime import() with a variable argument.
+function noOtelPlugin(): Plugin {
+  const OTEL_IMPORT = `import(/* webpackIgnore: true */ /* turbopackIgnore: true */ /* @vite-ignore */ OTEL_PKG).catch(() => null)`
+  const NULL_PROMISE = `Promise.resolve(null)`
+
+  return {
+    name: 'no-otel',
+    transform(code, id) {
+      if (!id.includes('@supabase') || !code.includes(OTEL_IMPORT)) return null
+      return { code: code.replace(OTEL_IMPORT, NULL_PROMISE), map: null }
+    },
+  }
+}
+
 export default defineConfig(({ mode }) => {
   const isFirefox = mode === 'firefox'
 
@@ -42,6 +58,6 @@ export default defineConfig(({ mode }) => {
       emptyOutDir: true,
       copyPublicDir: true,
     },
-    plugins: isFirefox ? [firefoxManifestPlugin()] : [],
+    plugins: [noOtelPlugin(), ...(isFirefox ? [firefoxManifestPlugin()] : [])],
   }
 })
