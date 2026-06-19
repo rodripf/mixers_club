@@ -147,7 +147,7 @@ export async function initRecipePage(cookidooId: string, domain: string): Promis
 
               const starsDiv = card.querySelector<HTMLElement>(`#mc-stars-${reviewId}`)
               if (starsDiv) {
-                starsDiv.innerHTML = ''
+                starsDiv.replaceChildren()
                 Array.from({ length: 5 }, (_, i) => {
                   const s = document.createElement('span')
                   s.textContent = '★'
@@ -178,7 +178,7 @@ export async function initRecipePage(cookidooId: string, domain: string): Promis
 
         // Inline confirmation — replace delete btn with Yes/No
         const ownBtns = deleteBtn.parentElement!
-        ownBtns.innerHTML = ''
+        ownBtns.replaceChildren()
 
         const confirmMsg = document.createElement('span')
         confirmMsg.style.cssText = 'font-size:0.75rem;color:#374151'
@@ -193,7 +193,7 @@ export async function initRecipePage(cookidooId: string, domain: string): Promis
         noBtn.style.cssText = 'background:none;border:none;cursor:pointer;font-size:0.75rem;color:#6b7280;padding:0 4px'
 
         noBtn.addEventListener('click', () => {
-          ownBtns.innerHTML = ''
+          ownBtns.replaceChildren()
           ownBtns.appendChild(editBtn2)
           ownBtns.appendChild(deleteBtnRestored)
         })

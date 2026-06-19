@@ -106,7 +106,7 @@ export function showAuthModal(onAuthenticated: () => void): void {
   showLogin()
 
   function showLogin() {
-    content.innerHTML = ''
+    content.replaceChildren()
     content.appendChild(makeHeader(t('authLoginTitle'), t('authLoginSubtitle'), '🍳'))
 
     const emailInput = makeInput('email', t('authEmailPlaceholder'))
@@ -151,7 +151,7 @@ export function showAuthModal(onAuthenticated: () => void): void {
   }
 
   function showEmailSent(email: string) {
-    content.innerHTML = ''
+    content.replaceChildren()
 
     const header = makeHeader(t('authEmailSentTitle'), '', '📧')
     const subtitle = document.createElement('p')
@@ -196,7 +196,7 @@ export function showAuthModal(onAuthenticated: () => void): void {
   }
 
   function showUsernameForm() {
-    content.innerHTML = ''
+    content.replaceChildren()
     content.appendChild(makeHeader(t('authUsernameTitle'), t('authUsernameSubtitle'), '👤'))
 
     const usernameInput = makeInput('text', t('authUsernamePlaceholder'))
