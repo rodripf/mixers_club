@@ -29,6 +29,7 @@
   "host_permissions": [
     "*://translate.googleapis.com/*",
     "*://*.cookidoo.com/*",
+    "*://cookidoo.thermomix.com/*",
     "*://*.cookidoo.es/*",
     "*://*.cookidoo.de/*",
     "*://*.cookidoo.fr/*",
@@ -44,7 +45,11 @@
     "*://*.cookidoo.ch/*",
     "*://*.cookidoo.at/*",
     "*://*.cookidoo.mx/*",
-    "*://*.cookidoo.ca/*"
+    "*://*.cookidoo.ca/*",
+    "*://*.cookidoo.com.cn/*",
+    "*://*.cookidoo.cz/*",
+    "*://*.cookidoo.pl/*",
+    "*://cookidoo.international/*"
   ],
   "background": {
     "page": "background.html"
@@ -53,6 +58,7 @@
     {
       "matches": [
         "*://*.cookidoo.com/*",
+        "*://cookidoo.thermomix.com/*",
         "*://*.cookidoo.es/*",
         "*://*.cookidoo.de/*",
         "*://*.cookidoo.fr/*",
@@ -68,7 +74,11 @@
         "*://*.cookidoo.ch/*",
         "*://*.cookidoo.at/*",
         "*://*.cookidoo.mx/*",
-        "*://*.cookidoo.ca/*"
+        "*://*.cookidoo.ca/*",
+        "*://*.cookidoo.com.cn/*",
+        "*://*.cookidoo.cz/*",
+        "*://*.cookidoo.pl/*",
+        "*://cookidoo.international/*"
       ],
       "js": [
         "content-script.js"

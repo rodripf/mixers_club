@@ -4,7 +4,7 @@
 [![Version](https://img.shields.io/github/v/release/rodripf/mixers_club)](https://github.com/rodripf/mixers_club/releases/latest)
 [![Tests](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/rodripf/mixers_club/master/.github/badges/tests.json)](https://github.com/rodripf/mixers_club/actions/workflows/ci.yml)
 
-A Chrome extension that adds a community layer to [Cookidoo](https://cookidoo.com) — the official Thermomix recipe platform. Browse community reviews on recipe pages, see trending recipes voted by fellow Thermomix users, and contribute your own tips and variations.
+A browser extension (Chrome and Firefox) that adds a community layer to Cookidoo — the official Thermomix recipe platform. Browse community reviews on recipe pages, see trending recipes voted by fellow Thermomix users, and contribute your own tips and variations.
 
 > **Disclaimer:** Mixers Club is an independent community project and is not affiliated with, endorsed by, or in any way related to Thermomix®, Vorwerk®, or Cookidoo®.
 
@@ -39,9 +39,13 @@ See more: [Login](public/screenshots/login.jpg) · [Username setup](public/scree
 
 ## Installation
 
-### From the Chrome Web Store
+### Chrome Web Store
 
 [Install Mixers Club on the Chrome Web Store](https://chromewebstore.google.com/detail/mixers-club/khclelnkphbolaegfnfehihlnempngik)
+
+### Firefox Add-ons
+
+[Install Mixers Club on Firefox Add-ons (AMO)](https://addons.mozilla.org/en-US/firefox/addon/mixers-club/)
 
 ### Load unpacked (development)
 
@@ -83,10 +87,12 @@ VITE_SUPABASE_ANON_KEY=your-anon-key
 ### Commands
 
 ```bash
-pnpm run build       # Production build → dist/
-pnpm run test        # Run test suite (Vitest)
-pnpm run typecheck   # TypeScript type checking
-pnpm run publish     # Bump version, build, and package .zip for Chrome Web Store
+pnpm run build                                          # Chrome production build → dist/
+pnpm run build:firefox                                  # Firefox production build → dist-firefox/
+pnpm run test                                           # Run test suite (Vitest)
+pnpm run typecheck                                      # TypeScript type checking
+pnpm run publish -- <version>                           # Bump version, build, and package .zip for Chrome Web Store
+pnpm run publish -- <version> --platform firefox        # Bump version, build, and package .zip for Firefox AMO
 ```
 
 ### How this was built
